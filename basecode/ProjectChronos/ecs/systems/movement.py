@@ -1,6 +1,7 @@
 # movement.py
 from ecs.systems.base import System
 from ..components.components import Movable, Position
+from ..entities.enemy import Enemy
 
 
 class MovementSystem(System):
@@ -14,3 +15,9 @@ class MovementSystem(System):
             # 更新位置
             pos.x += int(mov.dx * mov.speed * dt)
             pos.y += int(mov.dy * mov.speed * dt)
+
+            # 检查是否为敌人并触发相关逻辑
+            enemy = self.em.get_component(entity, Enemy)
+            if enemy and hasattr(enemy, 'on_move'):
+                enemy.on_move()
+

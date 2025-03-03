@@ -8,7 +8,6 @@ import pygame  # 添加导入语句
 from ecs.components.components import Movable, Position, Health
 from ecs.components.combat import EnemyTag
 from ecs.entities import Player
-from ecs.entities.enemy import Enemy
 from ecs.entity_manager import EntityManager  # 新增导入语句
 from ..utils.ascii_display import ASCIIDisplay
 from ..utils.player_info_window import PlayerInfoWindow  # 新增导入语句
@@ -74,7 +73,13 @@ class ChronosGame(WorldLine):
         # 新增：创建敌人实例并添加到 EntityManager
         enemy_id = self.em.add_entity()  # 生成唯一实体ID
         # 修改: 获取敌人生成位置
-        enemy_x, enemy_y = self._find_enemy_spawn_position(self.current_level)
+        try:
+            enemy_x, enemy_y = self._find_enemy_spawn_position(self.current_level)
+            print(f"Enemy spawn position: ({enemy_x}, {enemy_y})")
+        except ValueError as e:
+            print(f"Error finding enemy spawn position: {e}")
+            enemy_x, enemy_y = 0, 0  # Fallback position if no valid position is found
+
         self.em.add_component(enemy_id, Position(enemy_x, enemy_y))
         self.em.add_component(enemy_id, Movable(speed=1.5))
         self.em.add_component(enemy_id, EnemyTag(difficulty=2))

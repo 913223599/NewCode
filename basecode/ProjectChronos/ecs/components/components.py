@@ -4,8 +4,8 @@ class AIComponent:
     target: str = None  # 目标实体ID
 
 class Movable:
-    """ 可移动组件 """
-    speed: float = 5.0  # 格子/秒
+    def __init__(self, speed: float = 5.0):
+        self.speed = speed
 
 class Position:
     """ 实体位置组件 """
@@ -20,8 +20,10 @@ class Renderable:
 
 class Health:
     """ 生命值组件 """
-    current: int = 100
-    max: int = 100
+    def __init__(self, Health: float = 100):
+        self.Health = Health
+        self.current = Health
+        self.max = Health
 
 class ElementState:
     """ 元素状态组件 """

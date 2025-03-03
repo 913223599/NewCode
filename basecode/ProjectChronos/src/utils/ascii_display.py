@@ -43,7 +43,8 @@ class ASCIIDisplay:
             screen.blit(text_surface, (-32 + camera_offset[0], y * 32 + camera_offset[1]))
 
         # 渲染敌人
-        for entity in entity_manager.get_entities_with(Position, Enemy):
+        from ecs.components.combat import EnemyTag
+        for entity in entity_manager.get_entities_with(Position, EnemyTag):
             pos = entity_manager.get_component(entity, Position)
             enemy = entity_manager.get_component(entity, Enemy)
             symbol = 'E' if not isinstance(enemy, QuantumPhantom) else 'Q'  # 根据敌人类型自定义符号

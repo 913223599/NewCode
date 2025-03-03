@@ -1,7 +1,8 @@
 class Enemy:
-    def __init__(self, x, y):
+    def __init__(self, x, y, difficulty=1):
         self.x = x
         self.y = y
+        self.difficulty = difficulty
         self.health = 100  # 假设敌人初始生命值为100
 
     def take_damage(self, damage):
