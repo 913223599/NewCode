@@ -1,0 +1,11 @@
+// weapon_compatibility.json
+{
+    "flamethrower_nozzle": {
+        "compatible_with": ["cryo_core", "plasma_core"],
+        "conflicts": ["arc_blade"]
+    },
+    "cryo_core": {
+        "compatible_with": ["grenade_launcher", "beam_emitter"],
+        "conflicts": ["pyro_trigger"]
+    }
+}
