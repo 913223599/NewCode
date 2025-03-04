@@ -1,5 +1,5 @@
 class Enemy:
-    def __init__(self, x, y, difficulty=1,):
+    def __init__(self, x, y, difficulty= 1):
         self.x = x
         self.y = y
         self.difficulty = difficulty
@@ -12,7 +12,8 @@ class Enemy:
             self.health = 0
             self.die()
 
-    def die(self):
+    @staticmethod
+    def die():
         """敌人死亡处理方法"""
         print("Enemy died")
 

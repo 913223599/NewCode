@@ -76,7 +76,6 @@ class ChronosGame(WorldLine):
         # 修改: 获取敌人生成位置
         try:
             enemy_x, enemy_y = self._find_enemy_spawn_position(self.current_level)
-            print(f"Enemy spawn position: ({enemy_x}, {enemy_y})")
         except ValueError as e:
             print(f"Error finding enemy spawn position: {e}")
             enemy_x, enemy_y = 0, 0  # Fallback position if no valid position is found
@@ -86,9 +85,8 @@ class ChronosGame(WorldLine):
         self.em.add_component(enemy_id, Movable(speed=1.5))
         self.em.add_component(enemy_id, EnemyTag(difficulty=2))
         self.em.add_component(enemy_id, Health(150))
-        # 修改: 将 enemy_x 和 enemy_y 传递给 Enemy 构造函数
-        self.em.add_component(enemy_id, Enemy(enemy_x, enemy_y))
-        print("Enemy components:", self.em.get_components(enemy_id))
+        # 修改: 确保传递给 Enemy 的参数是整数
+        self.em.add_component(enemy_id, Enemy(int(enemy_x), int(enemy_y)))
 
         # 新增：创建玩家属性窗口实例
         self.use_player_info_window = use_player_info_window
@@ -101,6 +99,8 @@ class ChronosGame(WorldLine):
 
         # 新增：初始化 chaos_factor 属性
         self.chaos_factor = 1.0  # 初始混沌因子
+
+        self.show_enemy_debug = False  # 新增：控制显示敌人调试信息的标志
 
     def _get_world_snapshot(self):
         """获取世界状态快照"""
@@ -145,12 +145,15 @@ class ChronosGame(WorldLine):
                     # 创建时间锚点
                     self.create_anchor('last_anchor')
 
-            # 实现时间回溯快捷键
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_BACKSPACE:
-                self.load_anchor()
-            # 添加时间暂停快捷键
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-                self._toggle_time_pause()
+                # 实现时间回溯快捷键
+                if event.key == pygame.K_BACKSPACE:
+                    self.load_anchor()
+                # 添加时间暂停快捷键
+                if event.key == pygame.K_SPACE:
+                    self._toggle_time_pause()
+                # 新增：处理 CTRL+H 快捷键
+                if event.key == pygame.K_h and (pygame.key.get_mods() & pygame.KMOD_CTRL):
+                    self.show_enemy_debug = not self.show_enemy_debug
 
     def run(self):
         clock = pygame.time.Clock()
@@ -175,7 +178,6 @@ class ChronosGame(WorldLine):
 
             # 重置玩家移动标志
             self.player_moved = False
-
             pygame.display.flip()
             clock.tick(60)
 
@@ -243,11 +245,14 @@ class ChronosGame(WorldLine):
 
     def _find_enemy_spawn_position(self, level_map):
         """找到一个合适的敌人初始生成位置"""
+        valid_positions = []
         for y, row in enumerate(level_map):
             for x, tile in enumerate(row):
                 if tile == '.':  # 地板位置
-                    return x, y
-        raise ValueError("No valid enemy spawn position found in the map")
+                    valid_positions.append((x, y))
+        if not valid_positions:
+            raise ValueError("No valid enemy spawn position found in the map")
+        return random.choice(valid_positions)  # 随机选择一个位置
 
 
 class Weapon:
