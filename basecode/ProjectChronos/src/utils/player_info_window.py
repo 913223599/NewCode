@@ -1,7 +1,7 @@
 import pygame
 
+from ecs.components.combat import EnemyTag
 from ecs.components.components import Position
-from ecs.entities.enemy import Enemy
 
 
 class PlayerInfoWindow:
@@ -27,7 +27,7 @@ class PlayerInfoWindow:
 
         # 获取敌人坐标信息
         entity_manager = game_state['entity_manager']
-        enemies = entity_manager.get_entities_with(Position, Enemy)  # 确保返回值非空
+        enemies = entity_manager.get_entities_with(Position, EnemyTag)  # 确保返回值非空
         if not enemies:
             print("Warning: No enemies found in the entity manager.")
             enemy_positions = []

@@ -1,5 +1,5 @@
 class Enemy:
-    def __init__(self, x, y, difficulty=1):
+    def __init__(self, x, y, difficulty=1,):
         self.x = x
         self.y = y
         self.difficulty = difficulty

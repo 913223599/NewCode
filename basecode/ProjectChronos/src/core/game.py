@@ -8,6 +8,7 @@ import pygame  # 添加导入语句
 from ecs.components.components import Movable, Position, Health
 from ecs.components.combat import EnemyTag
 from ecs.entities import Player
+from ecs.entities.enemy import Enemy
 from ecs.entity_manager import EntityManager  # 新增导入语句
 from ..utils.ascii_display import ASCIIDisplay
 from ..utils.player_info_window import PlayerInfoWindow  # 新增导入语句
@@ -80,10 +81,14 @@ class ChronosGame(WorldLine):
             print(f"Error finding enemy spawn position: {e}")
             enemy_x, enemy_y = 0, 0  # Fallback position if no valid position is found
 
+        enemy_id = self.em.add_entity()  # 或使用create_entity方法
         self.em.add_component(enemy_id, Position(enemy_x, enemy_y))
         self.em.add_component(enemy_id, Movable(speed=1.5))
         self.em.add_component(enemy_id, EnemyTag(difficulty=2))
-        self.em.add_component(enemy_id, Health(150))  # 添加血量组件
+        self.em.add_component(enemy_id, Health(150))
+        # 修改: 将 enemy_x 和 enemy_y 传递给 Enemy 构造函数
+        self.em.add_component(enemy_id, Enemy(enemy_x, enemy_y))
+        print("Enemy components:", self.em.get_components(enemy_id))
 
         # 新增：创建玩家属性窗口实例
         self.use_player_info_window = use_player_info_window

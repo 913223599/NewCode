@@ -28,6 +28,13 @@ class EntityManager:
         self._components[comp_type][entity_id] = component
         self._entities[entity_id].add(comp_type)
 
+    def get_components(self, entity_id: str) -> dict:
+        """ 获取实体所有组件 """
+        return {
+            comp_type: self._components[comp_type][entity_id]
+            for comp_type in self._entities.get(entity_id, set())
+            if entity_id in self._components[comp_type]
+    }
 
     def get_component(self, entity_id: str, component_type):
         """ 获取实体特定组件 """
